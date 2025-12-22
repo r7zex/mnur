@@ -4,7 +4,7 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 
-def run(host: str = "0.0.0.0", port: int = 8000) -> None:
+def run(host: str = "127.0.0.1", port: int = 8000) -> None:
     """Запускает локальный сервер для каталога web."""
     web_root = Path(__file__).resolve().parents[1] / "web"
     if not web_root.exists():
