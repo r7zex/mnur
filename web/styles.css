@@ -832,10 +832,20 @@ body.alarm .calendar-day:has(#calendar-alert-dot) .day-number {
   object-fit: cover;
   transform-origin: center;
   transition: transform 0.2s ease;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 .map-zoom-viewport.is-panning {
   cursor: grabbing;
+}
+
+.map-zoom-viewport.is-panning img {
+  transition: none;
+}
+
+body.alarm .map-zoom-viewport img {
+  transition: transform 0.05s linear;
 }
 
 .map-zoom-controls {

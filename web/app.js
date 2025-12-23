@@ -100,6 +100,9 @@ function applyAlarmMode() {
     return;
   }
   document.body.classList.add("alarm");
+  if (mapImage) {
+    mapImage.src = "assets/street_alarm.png";
+  }
   if (statusText) {
     statusText.textContent = "ВНИМАНИЕ! ПРОИСШЕСТВИЕ В ВАШЕМ РАЙОНЕ!";
   }
@@ -228,6 +231,9 @@ function setupMapPanZoom() {
   if (!alarmMapImage || !alarmMapViewport) {
     return;
   }
+
+  alarmMapImage.setAttribute("draggable", "false");
+  alarmMapImage.addEventListener("dragstart", (event) => event.preventDefault());
 
   alarmMapViewport.addEventListener(
     "wheel",
