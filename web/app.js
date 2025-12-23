@@ -10,6 +10,9 @@ const mapImage = document.getElementById("map-image");
 const crestLogo = document.getElementById("crest-logo");
 const crestEmoji = document.getElementById("crest-emoji");
 
+const bagProgressValue = document.getElementById("bag-progress-value");
+const bagProgressBar = document.getElementById("bag-progress-bar");
+
 const envConfig = {
   MAP_IMAGE_PATH: "",
   MINISTRY_LOGO_PATH: "",
@@ -21,11 +24,15 @@ const state = {
       title: "Новый маршрут",
       message: "Опубликован безопасный маршрут к укрытию №24.",
       time: "сегодня, 09:15",
+      icon: "🗺️",
+      tone: "info",
     },
     {
       title: "Обновление погоды",
       message: "Ожидается сильный ветер после 18:00.",
       time: "сегодня, 07:45",
+      icon: "🌬️",
+      tone: "warning",
     },
   ],
 };
@@ -131,12 +138,52 @@ function renderNotifications() {
     const card = document.createElement("div");
     card.className = "notification-card";
     card.innerHTML = `
-      <h4>${item.title}</h4>
-      <p>${item.message}</p>
-      <span class="notification-time">${item.time}</span>
+      <div class="notification-icon ${item.tone}">${item.icon}</div>
+      <div class="notification-content">
+        <h4>${item.title}</h4>
+        <p>${item.message}</p>
+        <span class="notification-time">${item.time}</span>
+      </div>
     `;
     notificationList.appendChild(card);
   });
+}
+
+let mapInstance = null;
+
+function initMap() {
+  if (!window.L) {
+    return;
+  }
+  if (mapInstance) {
+    mapInstance.invalidateSize();
+    return;
+  }
+  mapInstance = window.L.map("full-map").setView([55.751244, 37.618423], 12);
+  window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "&copy; OpenStreetMap contributors",
+  }).addTo(mapInstance);
+  window.L.marker([55.761244, 37.598423])
+    .addTo(mapInstance)
+    .bindPopup("Укрытие №24");
+  window.L.marker([55.741244, 37.628423])
+    .addTo(mapInstance)
+    .bindPopup("Пункт помощи");
+}
+
+function updateBagProgress() {
+  const items = document.querySelectorAll(".bag-check");
+  if (!items.length) {
+    return;
+  }
+  const checked = Array.from(items).filter((item) => item.checked).length;
+  const percent = Math.round((checked / items.length) * 100);
+  if (bagProgressValue) {
+    bagProgressValue.textContent = `${percent}%`;
+  }
+  if (bagProgressBar) {
+    bagProgressBar.style.width = `${percent}%`;
+  }
 }
 
 function showScreen(name) {
@@ -149,6 +196,9 @@ function showScreen(name) {
   document.querySelectorAll(".nav-item").forEach((item) => {
     item.classList.toggle("active", item.dataset.action === name);
   });
+  if (name === "map") {
+    window.setTimeout(initMap, 0);
+  }
 }
 
 function handleAction(action) {
@@ -164,9 +214,6 @@ function handleAction(action) {
       break;
     case "notifications":
       showScreen("notifications");
-      state.notifications = [];
-      updateBadge();
-      renderNotifications();
       break;
     case "profile":
       showScreen("profile");
@@ -175,86 +222,37 @@ function handleAction(action) {
       showScreen("home");
       break;
     case "open-map":
-      showModal({
-        title: "Маршрут на карте",
-        message: "Построить маршрут до ближайшего безопасного пункта?",
-        onConfirm: () => showToast("Маршрут построен и сохранён."),
-      });
+      showScreen("map");
       break;
     case "submit-claim":
-      showModal({
-        title: "Заявление о компенсации",
-        message: "Новая заявка будет создана на основе вашего профиля.",
-        onConfirm: () => showToast("Черновик заявления сохранён."),
-      });
+      showScreen("claim");
       break;
     case "calendar":
-      showModal({
-        title: "Календарь происшествий",
-        message: "В календаре отмечены дни с повышенной активностью.",
-        onConfirm: () => showToast("Фильтры календаря обновлены."),
-      });
+      showScreen("calendar");
       break;
     case "go-bag":
-      showModal({
-        title: "Тревожный рюкзак",
-        message: "Список собран на 80%. Обновить недостающие позиции?",
-        onConfirm: () => showToast("Список рюкзака обновлён."),
-        confirmText: "Обновить",
-      });
+      showScreen("go-bag");
       break;
     case "shelters":
-      showModal({
-        title: "Укрытия",
-        message: "Доступно 3 укрытия в радиусе 2 км. Показать на карте?",
-        onConfirm: () => showToast("Укрытия отмечены на карте."),
-        confirmText: "Показать",
-      });
+      showScreen("shelters");
       break;
     case "safety":
-      showModal({
-        title: "Безопасность",
-        message: "Рекомендуется проверить комплект аптечки и фонаря.",
-        onConfirm: () => showToast("Напоминание добавлено."),
-        confirmText: "Добавить",
-      });
+      showScreen("safety");
       break;
     case "support":
-      showModal({
-        title: "Чат поддержки",
-        message: "Оператор ответит в течение 2 минут. Начать диалог?",
-        onConfirm: () => showToast("Диалог с оператором открыт."),
-        confirmText: "Начать",
-      });
+      showScreen("support");
       break;
     case "plan-complete":
-      showModal({
-        title: "План выполнен",
-        message: "Отметить выполнение плана в журнале действий?",
-        onConfirm: () => showToast("План отмечен как выполненный."),
-      });
+      showScreen("plan-complete");
       break;
     case "call-112":
-      showModal({
-        title: "Экстренный вызов",
-        message: "Позвонить в службу 112 прямо сейчас?",
-        onConfirm: () => showToast("Инициирован вызов 112."),
-        confirmText: "Позвонить",
-      });
+      showScreen("call-112");
       break;
     case "risk-plan":
-      showModal({
-        title: "План действий",
-        message: "Открыть подробный план реагирования на текущие риски?",
-        onConfirm: () => showToast("План действий открыт."),
-      });
+      showScreen("risk-plan");
       break;
     case "edit-profile":
-      showModal({
-        title: "Профиль",
-        message: "Открыть режим редактирования профиля?",
-        onConfirm: () => showToast("Режим редактирования включён."),
-      });
+      showScreen("edit-profile");
       break;
     default:
       showToast("Действие выполнено.");
@@ -278,9 +276,14 @@ function setupActions() {
   document
     .getElementById("notifications-button")
     .addEventListener("click", () => handleAction("notifications"));
+
+  document.querySelectorAll(".bag-check").forEach((item) => {
+    item.addEventListener("change", updateBagProgress);
+  });
 }
 
 renderNotifications();
 updateBadge();
 setupActions();
 loadEnvConfig();
+updateBagProgress();

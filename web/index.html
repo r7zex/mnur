@@ -11,6 +11,12 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
   </head>
   <body>
     <div class="device">
@@ -199,7 +205,15 @@
             <button class="back-button" data-action="back-home">←</button>
             <div class="page-title">Уведомления</div>
           </header>
-          <section class="info-card" id="notification-list"></section>
+          <section class="notification-hero">
+            <div>
+              <p class="eyebrow">За последние 24 часа</p>
+              <h2>2 новых уведомления</h2>
+              <p class="muted">Мы отправляем только важные предупреждения и обновления.</p>
+            </div>
+            <button class="outline-button" data-action="risk-plan">Посмотреть план</button>
+          </section>
+          <section class="info-card notification-list" id="notification-list"></section>
         </main>
 
         <main class="app-content" data-screen="profile">
@@ -207,9 +221,18 @@
             <button class="back-button" data-action="back-home">←</button>
             <div class="page-title">Профиль</div>
           </header>
-          <section class="info-card">
-            <h3>Ирина Смирнова</h3>
-            <p>Статус готовности: высокий</p>
+          <section class="profile-hero">
+            <div class="profile-identity">
+              <div class="avatar-lg">ИС</div>
+              <div>
+                <h2>Ирина Смирнова</h2>
+                <p class="muted">г. Москва · зона стабильности 2</p>
+              </div>
+            </div>
+            <div class="profile-status">
+              <span>Статус готовности</span>
+              <strong>Высокий</strong>
+            </div>
             <div class="profile-metrics">
               <div>
                 <span class="metric-value">4</span>
@@ -224,7 +247,411 @@
                 <span class="metric-label">предупреждения</span>
               </div>
             </div>
+          </section>
+          <section class="info-card">
+            <h3>Экстренные контакты</h3>
+            <div class="contact-row">
+              <div>
+                <strong>Алексей Смирнов</strong>
+                <p class="muted">+7 (901) 555-21-90 · супруг</p>
+              </div>
+              <button class="tag-button">SMS</button>
+            </div>
+            <div class="contact-row">
+              <div>
+                <strong>Елена Петрова</strong>
+                <p class="muted">+7 (903) 112-10-43 · сосед</p>
+              </div>
+              <button class="tag-button">Позвонить</button>
+            </div>
+          </section>
+          <section class="info-card">
+            <h3>Настройки безопасности</h3>
+            <div class="setting-row">
+              <div>
+                <strong>Геолокация</strong>
+                <p class="muted">Отправлять координаты в центр</p>
+              </div>
+              <span class="pill pill-success">включено</span>
+            </div>
+            <div class="setting-row">
+              <div>
+                <strong>Push-уведомления</strong>
+                <p class="muted">Только срочные события</p>
+              </div>
+              <span class="pill">настроено</span>
+            </div>
             <button class="primary-button" data-action="edit-profile">Редактировать профиль</button>
+          </section>
+        </main>
+
+        <main class="app-content" data-screen="map">
+          <header class="page-header compact">
+            <button class="back-button" data-action="back-home">←</button>
+            <div class="page-title">Карта безопасности</div>
+          </header>
+          <section class="map-full">
+            <div class="map-meta">
+              <div>
+                <h3>Маршрут до укрытия №24</h3>
+                <p class="muted">Время в пути: 6 минут пешком</p>
+              </div>
+              <span class="pill pill-success">безопасно</span>
+            </div>
+            <div class="map-live" id="full-map"></div>
+            <div class="map-actions">
+              <button class="outline-button" data-action="shelters">Список укрытий</button>
+              <button class="primary-button" data-action="risk-plan">План действий</button>
+            </div>
+          </section>
+        </main>
+
+        <main class="app-content" data-screen="calendar">
+          <header class="page-header compact">
+            <button class="back-button" data-action="back-home">←</button>
+            <div class="page-title">Календарь происшествий</div>
+          </header>
+          <section class="info-card">
+            <h3>Сводка за неделю</h3>
+            <div class="calendar-summary">
+              <div class="summary-item">
+                <span class="summary-value">0</span>
+                <span class="summary-label">срочных ЧС</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-value">2</span>
+                <span class="summary-label">предупреждения</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-value">1</span>
+                <span class="summary-label">тренировка</span>
+              </div>
+            </div>
+            <button class="outline-button" data-action="submit-claim">Сообщить о событии</button>
+          </section>
+          <section class="info-card">
+            <h3>Ближайшие события</h3>
+            <div class="timeline">
+              <div class="timeline-item">
+                <span class="timeline-dot info"></span>
+                <div>
+                  <strong>30 сентября · Информационное окно</strong>
+                  <p class="muted">Проверка коммуникаций и оповещения жителей.</p>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <span class="timeline-dot warning"></span>
+                <div>
+                  <strong>2 октября · Повышенная нагрузка</strong>
+                  <p class="muted">Рекомендуется не пользоваться лифтами.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+
+        <main class="app-content" data-screen="claim">
+          <header class="page-header compact">
+            <button class="back-button" data-action="back-home">←</button>
+            <div class="page-title">Заявление на компенсацию</div>
+          </header>
+          <section class="info-card">
+            <h3>Черновик заявления</h3>
+            <p class="muted">
+              Заявление будет сформировано на основе вашего профиля и адреса проживания.
+            </p>
+            <div class="form-grid">
+              <label class="form-field">
+                <span>Тип происшествия</span>
+                <select>
+                  <option>Наводнение</option>
+                  <option>Повреждение имущества</option>
+                  <option>Эвакуация</option>
+                </select>
+              </label>
+              <label class="form-field">
+                <span>Адрес объекта</span>
+                <input type="text" value="Москва, ул. Садовая, 12" />
+              </label>
+              <label class="form-field">
+                <span>Контакт для обратной связи</span>
+                <input type="text" value="+7 (901) 123-45-67" />
+              </label>
+            </div>
+            <button class="primary-button" data-action="back-home">Сохранить и вернуться</button>
+          </section>
+          <section class="info-card">
+            <h3>Прикрепить документы</h3>
+            <div class="chip-grid">
+              <span class="chip">Фото повреждений</span>
+              <span class="chip">Квитанции</span>
+              <span class="chip">Документы собственности</span>
+            </div>
+          </section>
+        </main>
+
+        <main class="app-content" data-screen="go-bag">
+          <header class="page-header compact">
+            <button class="back-button" data-action="back-home">←</button>
+            <div class="page-title">Тревожный рюкзак</div>
+          </header>
+          <section class="info-card">
+            <h3>Готовность набора</h3>
+            <p class="muted">Обновите обязательные позиции перед выходом.</p>
+            <div class="progress-row">
+              <div class="progress-bar">
+                <div class="progress-fill" id="bag-progress-bar"></div>
+              </div>
+              <span class="progress-value" id="bag-progress-value">0%</span>
+            </div>
+          </section>
+          <section class="info-card">
+            <h3>Документы и деньги</h3>
+            <div class="checklist">
+              <label><input class="bag-check" type="checkbox" checked /> Паспорт и копии</label>
+              <label><input class="bag-check" type="checkbox" checked /> Документ купли-продажи жилья</label>
+              <label><input class="bag-check" type="checkbox" /> Страховой полис</label>
+              <label><input class="bag-check" type="checkbox" /> Наличные и банковские карты</label>
+            </div>
+          </section>
+          <section class="info-card">
+            <h3>Медицина и связь</h3>
+            <div class="checklist">
+              <label><input class="bag-check" type="checkbox" checked /> Индивидуальная аптечка</label>
+              <label><input class="bag-check" type="checkbox" /> Запас лекарств на 7 дней</label>
+              <label><input class="bag-check" type="checkbox" /> Зарядное устройство и powerbank</label>
+              <label><input class="bag-check" type="checkbox" /> Радиоприёмник</label>
+            </div>
+          </section>
+          <section class="info-card">
+            <h3>Быт и безопасность</h3>
+            <div class="checklist">
+              <label><input class="bag-check" type="checkbox" checked /> Тёплая одежда и обувь</label>
+              <label><input class="bag-check" type="checkbox" /> Фонарик и батарейки</label>
+              <label><input class="bag-check" type="checkbox" /> Запас воды и сухой паёк</label>
+              <label><input class="bag-check" type="checkbox" /> Набор ключей и свисток</label>
+            </div>
+            <button class="primary-button" data-action="back-home">Сохранить список</button>
+          </section>
+        </main>
+
+        <main class="app-content" data-screen="shelters">
+          <header class="page-header compact">
+            <button class="back-button" data-action="back-home">←</button>
+            <div class="page-title">Ближайшие укрытия</div>
+          </header>
+          <section class="info-card">
+            <h3>Укрытия рядом</h3>
+            <div class="shelter-list">
+              <div class="shelter-card">
+                <div>
+                  <strong>Укрытие №24</strong>
+                  <p class="muted">ул. Лесная, 8 · 620 м</p>
+                </div>
+                <span class="pill pill-success">открыто</span>
+              </div>
+              <div class="shelter-card">
+                <div>
+                  <strong>Укрытие №12</strong>
+                  <p class="muted">пр. Мира, 14 · 1,2 км</p>
+                </div>
+                <span class="pill">места 48%</span>
+              </div>
+              <div class="shelter-card">
+                <div>
+                  <strong>Укрытие №08</strong>
+                  <p class="muted">ул. Кольцевая, 3 · 1,8 км</p>
+                </div>
+                <span class="pill pill-warning">ожидается</span>
+              </div>
+            </div>
+            <button class="primary-button" data-action="open-map">Открыть карту</button>
+          </section>
+        </main>
+
+        <main class="app-content" data-screen="safety">
+          <header class="page-header compact">
+            <button class="back-button" data-action="back-home">←</button>
+            <div class="page-title">Комплект безопасности</div>
+          </header>
+          <section class="info-card">
+            <h3>Проверка оборудования</h3>
+            <div class="checklist">
+              <label><input type="checkbox" checked /> Огнетушитель и пломбы</label>
+              <label><input type="checkbox" checked /> Аптечка и лекарства</label>
+              <label><input type="checkbox" /> Набор инструментов</label>
+              <label><input type="checkbox" /> Запас питьевой воды</label>
+            </div>
+            <button class="outline-button" data-action="risk-plan">Обновить план</button>
+          </section>
+          <section class="info-card">
+            <h3>Домашняя безопасность</h3>
+            <div class="setting-row">
+              <div>
+                <strong>Датчики дыма</strong>
+                <p class="muted">Последняя проверка 5 дней назад</p>
+              </div>
+              <span class="pill">актуально</span>
+            </div>
+            <div class="setting-row">
+              <div>
+                <strong>Перекрытие газа</strong>
+                <p class="muted">Напоминание в 21:00</p>
+              </div>
+              <span class="pill pill-warning">запланировано</span>
+            </div>
+          </section>
+        </main>
+
+        <main class="app-content" data-screen="support">
+          <header class="page-header compact">
+            <button class="back-button" data-action="back-home">←</button>
+            <div class="page-title">Чат поддержки</div>
+          </header>
+          <section class="info-card chat-card">
+            <div class="chat-message incoming">
+              <p>Здравствуйте! Чем можем помочь?</p>
+              <span>09:22</span>
+            </div>
+            <div class="chat-message outgoing">
+              <p>Нужно уточнить адрес ближайшего укрытия.</p>
+              <span>09:23</span>
+            </div>
+            <div class="chat-message incoming">
+              <p>Укрытие №24 по адресу ул. Лесная, 8. Показать маршрут?</p>
+              <span>09:24</span>
+            </div>
+            <div class="chat-input">
+              <input type="text" placeholder="Написать сообщение" />
+              <button class="primary-button" data-action="open-map">Маршрут</button>
+            </div>
+          </section>
+        </main>
+
+        <main class="app-content" data-screen="plan-complete">
+          <header class="page-header compact">
+            <button class="back-button" data-action="back-home">←</button>
+            <div class="page-title">План выполнен</div>
+          </header>
+          <section class="info-card">
+            <h3>Отчёт о выполнении</h3>
+            <p class="muted">Запись сохранена в журнале действий.</p>
+            <div class="timeline">
+              <div class="timeline-item">
+                <span class="timeline-dot safe"></span>
+                <div>
+                  <strong>09:10 · Перекрыты коммуникации</strong>
+                  <p class="muted">Газ и электричество выключены.</p>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <span class="timeline-dot info"></span>
+                <div>
+                  <strong>09:18 · Добрались до укрытия</strong>
+                  <p class="muted">Укрытие №24 подтверждено.</p>
+                </div>
+              </div>
+            </div>
+            <button class="primary-button" data-action="back-home">Вернуться домой</button>
+          </section>
+        </main>
+
+        <main class="app-content" data-screen="call-112">
+          <header class="page-header compact">
+            <button class="back-button" data-action="back-home">←</button>
+            <div class="page-title">Экстренный вызов</div>
+          </header>
+          <section class="info-card">
+            <h3>Связь со службой 112</h3>
+            <p class="muted">В экстренной ситуации оставайтесь на линии и сообщайте адрес.</p>
+            <div class="action-grid">
+              <button class="primary-button">Позвонить 112</button>
+              <button class="outline-button" data-action="support">Написать оператору</button>
+            </div>
+          </section>
+          <section class="info-card">
+            <h3>Быстрые контакты</h3>
+            <div class="contact-row">
+              <div>
+                <strong>Служба спасения</strong>
+                <p class="muted">Короткий номер 112</p>
+              </div>
+              <span class="pill pill-danger">срочно</span>
+            </div>
+            <div class="contact-row">
+              <div>
+                <strong>Соседка Мария</strong>
+                <p class="muted">+7 (915) 224-10-12</p>
+              </div>
+              <button class="tag-button">Позвонить</button>
+            </div>
+          </section>
+        </main>
+
+        <main class="app-content" data-screen="risk-plan">
+          <header class="page-header compact">
+            <button class="back-button" data-action="back-home">←</button>
+            <div class="page-title">План действий</div>
+          </header>
+          <section class="info-card">
+            <h3>План реагирования на риски</h3>
+            <div class="step-list">
+              <div class="step-item">
+                <span class="step-index">1</span>
+                <div>
+                  <strong>Подготовить документы</strong>
+                  <p class="muted">Соберите паспорт, полис, документы собственности.</p>
+                </div>
+              </div>
+              <div class="step-item">
+                <span class="step-index">2</span>
+                <div>
+                  <strong>Собрать тревожный рюкзак</strong>
+                  <p class="muted">Проверьте питание, воду и аптечку.</p>
+                </div>
+              </div>
+              <div class="step-item">
+                <span class="step-index">3</span>
+                <div>
+                  <strong>Определить маршрут</strong>
+                  <p class="muted">Откройте карту и отметьте укрытия.</p>
+                </div>
+              </div>
+            </div>
+            <button class="primary-button" data-action="go-bag">Перейти к рюкзаку</button>
+          </section>
+        </main>
+
+        <main class="app-content" data-screen="edit-profile">
+          <header class="page-header compact">
+            <button class="back-button" data-action="back-home">←</button>
+            <div class="page-title">Редактировать профиль</div>
+          </header>
+          <section class="info-card">
+            <h3>Основные данные</h3>
+            <div class="form-grid">
+              <label class="form-field">
+                <span>ФИО</span>
+                <input type="text" value="Ирина Смирнова" />
+              </label>
+              <label class="form-field">
+                <span>Адрес</span>
+                <input type="text" value="Москва, ул. Садовая, 12" />
+              </label>
+              <label class="form-field">
+                <span>Телефон</span>
+                <input type="text" value="+7 (901) 123-45-67" />
+              </label>
+            </div>
+            <button class="primary-button" data-action="profile">Сохранить изменения</button>
+          </section>
+          <section class="info-card">
+            <h3>Предпочтения оповещений</h3>
+            <div class="checklist">
+              <label><input type="checkbox" checked /> SMS уведомления</label>
+              <label><input type="checkbox" checked /> Push-уведомления</label>
+              <label><input type="checkbox" /> Email отчёты</label>
+            </div>
           </section>
         </main>
 
@@ -262,6 +689,11 @@
       </div>
     </div>
 
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
     <script src="app.js"></script>
   </body>
 </html>
