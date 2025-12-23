@@ -823,6 +823,7 @@ body.alarm .calendar-day:has(#calendar-alert-dot) .day-number {
   display: grid;
   place-items: center;
   background: #eaf0fb;
+  cursor: grab;
 }
 
 .map-zoom-viewport img {
@@ -831,6 +832,10 @@ body.alarm .calendar-day:has(#calendar-alert-dot) .day-number {
   object-fit: cover;
   transform-origin: center;
   transition: transform 0.2s ease;
+}
+
+.map-zoom-viewport.is-panning {
+  cursor: grabbing;
 }
 
 .map-zoom-controls {

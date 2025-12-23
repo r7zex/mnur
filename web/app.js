@@ -8,6 +8,7 @@ const badge = document.getElementById("notification-badge");
 const notificationList = document.getElementById("notification-list");
 const mapImage = document.getElementById("map-image");
 const alarmMapImage = document.getElementById("alarm-map");
+const alarmMapViewport = document.querySelector(".map-zoom-viewport");
 const crestLogo = document.getElementById("crest-logo");
 const crestEmoji = document.getElementById("crest-emoji");
 const statusText = document.getElementById("status-text");
@@ -170,19 +171,44 @@ function renderNotifications() {
 }
 
 let mapZoomLevel = 1;
+let mapOffset = { x: 0, y: 0 };
+let isMapPanning = false;
+let mapPanStart = { x: 0, y: 0 };
+let mapPanOrigin = { x: 0, y: 0 };
 const MAP_ZOOM_MIN = 1;
 const MAP_ZOOM_MAX = 3;
+
+function clampMapOffset() {
+  if (!alarmMapImage || !alarmMapViewport) {
+    return;
+  }
+  const viewportRect = alarmMapViewport.getBoundingClientRect();
+  const maxOffsetX = Math.max(0, (viewportRect.width * mapZoomLevel - viewportRect.width) / 2);
+  const maxOffsetY = Math.max(0, (viewportRect.height * mapZoomLevel - viewportRect.height) / 2);
+  mapOffset.x = Math.min(maxOffsetX, Math.max(-maxOffsetX, mapOffset.x));
+  mapOffset.y = Math.min(maxOffsetY, Math.max(-maxOffsetY, mapOffset.y));
+}
+
+function updateMapTransform() {
+  if (!alarmMapImage) {
+    return;
+  }
+  clampMapOffset();
+  alarmMapImage.style.transform = `translate(${mapOffset.x}px, ${mapOffset.y}px) scale(${mapZoomLevel})`;
+}
 
 function setMapZoom(level) {
   if (!alarmMapImage) {
     return;
   }
   mapZoomLevel = Math.min(MAP_ZOOM_MAX, Math.max(MAP_ZOOM_MIN, level));
-  alarmMapImage.style.transform = `scale(${mapZoomLevel})`;
+  updateMapTransform();
 }
 
 function resetMapZoom() {
-  setMapZoom(1);
+  mapZoomLevel = 1;
+  mapOffset = { x: 0, y: 0 };
+  updateMapTransform();
 }
 
 function setupMapZoomControls() {
@@ -196,6 +222,55 @@ function setupMapZoomControls() {
       setMapZoom(mapZoomLevel + delta);
     });
   });
+}
+
+function setupMapPanZoom() {
+  if (!alarmMapImage || !alarmMapViewport) {
+    return;
+  }
+
+  alarmMapViewport.addEventListener(
+    "wheel",
+    (event) => {
+      event.preventDefault();
+      const delta = event.deltaY > 0 ? -0.15 : 0.15;
+      setMapZoom(mapZoomLevel + delta);
+    },
+    { passive: false }
+  );
+
+  alarmMapViewport.addEventListener("pointerdown", (event) => {
+    isMapPanning = true;
+    mapPanStart = { x: event.clientX, y: event.clientY };
+    mapPanOrigin = { ...mapOffset };
+    alarmMapViewport.classList.add("is-panning");
+    alarmMapViewport.setPointerCapture(event.pointerId);
+  });
+
+  alarmMapViewport.addEventListener("pointermove", (event) => {
+    if (!isMapPanning) {
+      return;
+    }
+    const deltaX = event.clientX - mapPanStart.x;
+    const deltaY = event.clientY - mapPanStart.y;
+    mapOffset = { x: mapPanOrigin.x + deltaX, y: mapPanOrigin.y + deltaY };
+    updateMapTransform();
+  });
+
+  const stopPanning = (event) => {
+    if (!isMapPanning) {
+      return;
+    }
+    isMapPanning = false;
+    alarmMapViewport.classList.remove("is-panning");
+    if (event?.pointerId != null) {
+      alarmMapViewport.releasePointerCapture(event.pointerId);
+    }
+  };
+
+  alarmMapViewport.addEventListener("pointerup", stopPanning);
+  alarmMapViewport.addEventListener("pointerleave", stopPanning);
+  alarmMapViewport.addEventListener("pointercancel", stopPanning);
 }
 
 function updateBagProgress() {
@@ -316,3 +391,4 @@ loadEnvConfig();
 updateBagProgress();
 applyAlarmMode();
 setupMapZoomControls();
+setupMapPanZoom();
