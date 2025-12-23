@@ -62,15 +62,31 @@
             </div>
           </section>
 
+          <section class="alert-card alarm-only">
+            <div class="alert-icon">🚨</div>
+            <div class="alert-content">
+              <strong>ВНИМАНИЕ!</strong>
+              <p>Обнаружено происшествие в вашем районе! Срочно ознакомьтесь с инструкциями.</p>
+            </div>
+            <button class="alarm-button" data-action="go-bag">Открыть тревожный рюкзак</button>
+          </section>
+
           <section class="map-panel">
             <div class="map-frame">
-              <img id="map-image" src="assets/street.png" alt="Карта района" />
+              <div class="map-layer">
+                <img id="map-image" src="assets/street.png" alt="Карта района" />
+                <div class="map-overlay alarm-only">
+                  <span class="map-zone"></span>
+                  <span class="map-pin pin-primary"></span>
+                  <span class="map-pin pin-secondary"></span>
+                </div>
+              </div>
             </div>
             <button class="primary-button" data-action="open-map">Открыть карту</button>
           </section>
 
           <section class="status-banner">
-            <div class="status-text">Ура, происшествий нет!</div>
+            <div class="status-text" id="status-text">Ура, происшествий нет!</div>
           </section>
 
           <section class="calendar-card">
@@ -97,7 +113,7 @@
               <div class="calendar-day">
                 <span class="day-label">Чт</span>
                 <span class="day-number">28</span>
-                <span class="day-dot safe"></span>
+                <span class="day-dot safe" id="calendar-alert-dot"></span>
               </div>
               <div class="calendar-day">
                 <span class="day-label">Пт</span>
@@ -694,6 +710,7 @@
       integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
       crossorigin=""
     ></script>
+    <script src="config.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

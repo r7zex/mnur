@@ -27,6 +27,10 @@ body {
   padding: 24px;
 }
 
+body.alarm {
+  background: linear-gradient(180deg, #eef3fb 0%, #dfe8f5 100%);
+}
+
 .device {
   width: 460px;
   max-width: 96vw;
@@ -155,6 +159,70 @@ body {
   box-shadow: var(--shadow);
 }
 
+body.alarm .user-bar {
+  background: #ffffff;
+  color: var(--text-primary);
+}
+
+body.alarm .icon-button {
+  background: #f0f3f9;
+  color: #1f4fa6;
+}
+
+.alarm-only {
+  display: none;
+}
+
+body.alarm .alarm-only {
+  display: grid;
+}
+
+.alert-card {
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 14px;
+  box-shadow: var(--shadow);
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.alert-card .alert-content {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.alert-card .alert-content strong {
+  font-size: 16px;
+  color: #1c2a4c;
+}
+
+.alert-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  background: #fce9e7;
+  color: #d6453d;
+  display: grid;
+  place-items: center;
+  font-size: 26px;
+  box-shadow: 0 8px 18px rgba(212, 85, 79, 0.3);
+}
+
+.alarm-button {
+  grid-column: 1 / -1;
+  border: none;
+  border-radius: 16px;
+  padding: 12px 16px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #d3323a 0%, #b7202a 100%);
+  box-shadow: 0 12px 22px rgba(179, 32, 42, 0.28);
+  cursor: pointer;
+}
+
 .avatar {
   width: 46px;
   height: 46px;
@@ -208,10 +276,20 @@ body {
   color: #fff;
 }
 
+body.alarm .map-panel {
+  background: linear-gradient(180deg, #d3323a 0%, #b7202a 100%);
+}
+
 .map-frame {
   background: #fff;
   border-radius: 18px;
   padding: 8px;
+}
+
+.map-layer {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
 }
 
 .map-frame img {
@@ -220,6 +298,57 @@ body {
   object-fit: cover;
   border-radius: 14px;
   border: 2px solid #1f7a3e;
+}
+
+body.alarm .map-frame img {
+  border-color: #d3323a;
+}
+
+.map-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.map-zone {
+  position: absolute;
+  inset: 20% 12% 22% 18%;
+  border-radius: 16px;
+  background: rgba(211, 50, 58, 0.25);
+  border: 2px solid rgba(183, 32, 42, 0.8);
+  box-shadow: 0 10px 20px rgba(183, 32, 42, 0.2);
+}
+
+.map-pin {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #d3323a;
+  border: 3px solid #fff;
+  box-shadow: 0 8px 14px rgba(179, 32, 42, 0.4);
+}
+
+.map-pin::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -8px;
+  width: 6px;
+  height: 6px;
+  background: #d3323a;
+  transform: translateX(-50%) rotate(45deg);
+  border-radius: 2px;
+}
+
+.map-pin.pin-primary {
+  top: 38%;
+  left: 52%;
+}
+
+.map-pin.pin-secondary {
+  top: 26%;
+  left: 68%;
 }
 
 .primary-button {
@@ -252,6 +381,10 @@ body {
   color: #fff;
   text-align: center;
   font-weight: 600;
+}
+
+body.alarm .status-banner {
+  background: #b7202a;
 }
 
 .calendar-card {
@@ -299,6 +432,18 @@ body {
   place-items: center;
   gap: 4px;
   font-size: 12px;
+}
+
+body.alarm .calendar-day:has(#calendar-alert-dot) {
+  background: #ffe8ea;
+}
+
+body.alarm #calendar-alert-dot {
+  background: #d3323a;
+}
+
+body.alarm .calendar-day:has(#calendar-alert-dot) .day-number {
+  color: #b7202a;
 }
 
 .day-label {
