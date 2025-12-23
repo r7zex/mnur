@@ -9,6 +9,11 @@ const notificationList = document.getElementById("notification-list");
 const mapImage = document.getElementById("map-image");
 const crestLogo = document.getElementById("crest-logo");
 const crestEmoji = document.getElementById("crest-emoji");
+const statusText = document.getElementById("status-text");
+const calendarAlertDot = document.getElementById("calendar-alert-dot");
+
+const appConfig = window.APP_CONFIG || {};
+const alarmEnabled = Boolean(appConfig.alarm);
 
 const bagProgressValue = document.getElementById("bag-progress-value");
 const bagProgressBar = document.getElementById("bag-progress-bar");
@@ -86,6 +91,20 @@ async function loadEnvConfig() {
     console.warn("Не удалось загрузить .env файл.", error);
   }
   applyEnvConfig();
+}
+
+function applyAlarmMode() {
+  if (!alarmEnabled) {
+    return;
+  }
+  document.body.classList.add("alarm");
+  if (statusText) {
+    statusText.textContent = "ВНИМАНИЕ! ПРОИСШЕСТВИЕ В ВАШЕМ РАЙОНЕ!";
+  }
+  if (calendarAlertDot) {
+    calendarAlertDot.classList.remove("safe");
+    calendarAlertDot.classList.add("danger");
+  }
 }
 
 function showToast(message) {
@@ -287,3 +306,4 @@ updateBadge();
 setupActions();
 loadEnvConfig();
 updateBagProgress();
+applyAlarmMode();
