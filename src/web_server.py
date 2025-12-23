@@ -4,8 +4,8 @@ from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-alarm = True
-
+alarm = False
+# ДЛЯ ТЕСТОВОГО РЕЖИМА
 
 class AppHandler(SimpleHTTPRequestHandler):
     """Отдаёт статические файлы и конфигурацию интерфейса."""
