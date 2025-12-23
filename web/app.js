@@ -5,22 +5,22 @@ const modalBody = document.getElementById("modal-body");
 const modalCancel = document.getElementById("modal-cancel");
 const modalConfirm = document.getElementById("modal-confirm");
 const badge = document.getElementById("notification-badge");
+const notificationList = document.getElementById("notification-list");
 
 const state = {
   notifications: [
     {
-      title: "Новое уведомление",
+      title: "Новый маршрут",
       message: "Опубликован безопасный маршрут к укрытию №24.",
+      time: "сегодня, 09:15",
+    },
+    {
+      title: "Обновление погоды",
+      message: "Ожидается сильный ветер после 18:00.",
+      time: "сегодня, 07:45",
     },
   ],
 };
-
-const notificationPanel = {
-  title: "Уведомления",
-  message: "Доступно 1 новое уведомление. Открыть список?",
-};
-
-const dayHighlights = new Set([14, 20, 21, 27, 28]);
 
 function showToast(message) {
   toast.textContent = message;
@@ -29,9 +29,10 @@ function showToast(message) {
   showToast.timeout = window.setTimeout(() => toast.classList.remove("show"), 2400);
 }
 
-function showModal({ title, message, onConfirm }) {
+function showModal({ title, message, onConfirm, confirmText = "Подтвердить" }) {
   modalTitle.textContent = title;
   modalBody.textContent = message;
+  modalConfirm.textContent = confirmText;
   modal.classList.add("show");
   modal.setAttribute("aria-hidden", "false");
   modalConfirm.onclick = () => {
@@ -58,83 +59,143 @@ function updateBadge() {
   badge.style.display = count > 0 ? "inline-flex" : "none";
 }
 
-function createCalendar() {
-  const grid = document.getElementById("calendar-grid");
-  for (let i = 0; i < 3; i += 1) {
-    const empty = document.createElement("div");
-    empty.className = "day";
-    empty.textContent = "";
-    grid.appendChild(empty);
+function renderNotifications() {
+  notificationList.innerHTML = "";
+  if (state.notifications.length === 0) {
+    const empty = document.createElement("p");
+    empty.textContent = "Нет новых уведомлений.";
+    notificationList.appendChild(empty);
+    return;
   }
 
-  for (let day = 1; day <= 30; day += 1) {
-    const cell = document.createElement("div");
-    cell.className = "day";
-    cell.textContent = day;
-    if (dayHighlights.has(day)) {
-      cell.classList.add("highlight");
+  state.notifications.forEach((item) => {
+    const card = document.createElement("div");
+    card.className = "notification-card";
+    card.innerHTML = `
+      <h4>${item.title}</h4>
+      <p>${item.message}</p>
+      <span class="notification-time">${item.time}</span>
+    `;
+    notificationList.appendChild(card);
+  });
+}
+
+function showScreen(name) {
+  document.querySelectorAll(".app-content").forEach((screen) => {
+    screen.classList.toggle("is-active", screen.dataset.screen === name);
+    if (screen.dataset.screen === name) {
+      screen.scrollTop = 0;
     }
-    cell.addEventListener("click", () => {
-      document.querySelectorAll(".day.active").forEach((active) => {
-        active.classList.remove("active");
-      });
-      cell.classList.add("active");
-      showToast(`Выбран день: ${day} апреля`);
-    });
-    grid.appendChild(cell);
-  }
+  });
+  document.querySelectorAll(".nav-item").forEach((item) => {
+    item.classList.toggle("active", item.dataset.action === name);
+  });
 }
 
 function handleAction(action) {
   switch (action) {
-    case "emergency":
-      showModal({
-        title: "Экстренное сопровождение",
-        message:
-          "Вы отправляете запрос в диспетчерскую службу. Подтвердите отправку?",
-        onConfirm: () => {
-          state.notifications.push({
-            title: "Запрос отправлен",
-            message: "Оператор свяжется с вами в течение 2 минут.",
-          });
-          updateBadge();
-          showToast("Запрос отправлен. Ожидайте звонка.");
-        },
-      });
+    case "home":
+      showScreen("home");
       break;
     case "instructions":
-      showToast("Открыт персональный список инструкций.");
+      showScreen("instructions");
       break;
     case "risks":
-      showToast("Показан реестр текущих рисков по району.");
+      showScreen("risks");
       break;
-    case "weather":
-      showToast("Загрузка прогноза погоды и предупреждений.");
+    case "notifications":
+      showScreen("notifications");
+      state.notifications = [];
+      updateBadge();
+      renderNotifications();
+      break;
+    case "profile":
+      showScreen("profile");
+      break;
+    case "back-home":
+      showScreen("home");
       break;
     case "open-map":
       showModal({
         title: "Маршрут на карте",
-        message:
-          "Построить маршрут до ближайшего безопасного пункта?",
-        onConfirm: () => showToast("Маршрут построен и сохранён в навигации."),
+        message: "Построить маршрут до ближайшего безопасного пункта?",
+        onConfirm: () => showToast("Маршрут построен и сохранён."),
       });
       break;
     case "submit-claim":
       showModal({
         title: "Заявление о компенсации",
-        message:
-          "Новая заявка будет создана на основе вашего профиля. Продолжить?",
+        message: "Новая заявка будет создана на основе вашего профиля.",
         onConfirm: () => showToast("Черновик заявления сохранён."),
       });
       break;
-    case "calendar-settings":
-      showToast("Фильтры календаря обновлены.");
+    case "calendar":
+      showModal({
+        title: "Календарь происшествий",
+        message: "В календаре отмечены дни с повышенной активностью.",
+        onConfirm: () => showToast("Фильтры календаря обновлены."),
+      });
       break;
-    case "home":
-      showToast("Вы находитесь на главном экране.");
+    case "go-bag":
+      showModal({
+        title: "Тревожный рюкзак",
+        message: "Список собран на 80%. Обновить недостающие позиции?",
+        onConfirm: () => showToast("Список рюкзака обновлён."),
+        confirmText: "Обновить",
+      });
       break;
-    case "profile":
-      showToast("Переход в профиль пользователя.");
+    case "shelters":
+      showModal({
+        title: "Укрытия",
+        message: "Доступно 3 укрытия в радиусе 2 км. Показать на карте?",
+        onConfirm: () => showToast("Укрытия отмечены на карте."),
+        confirmText: "Показать",
+      });
+      break;
+    case "safety":
+      showModal({
+        title: "Безопасность",
+        message: "Рекомендуется проверить комплект аптечки и фонаря.",
+        onConfirm: () => showToast("Напоминание добавлено."),
+        confirmText: "Добавить",
+      });
+      break;
+    case "support":
+      showModal({
+        title: "Чат поддержки",
+        message: "Оператор ответит в течение 2 минут. Начать диалог?",
+        onConfirm: () => showToast("Диалог с оператором открыт."),
+        confirmText: "Начать",
+      });
+      break;
+    case "plan-complete":
+      showModal({
+        title: "План выполнен",
+        message: "Отметить выполнение плана в журнале действий?",
+        onConfirm: () => showToast("План отмечен как выполненный."),
+      });
+      break;
+    case "call-112":
+      showModal({
+        title: "Экстренный вызов",
+        message: "Позвонить в службу 112 прямо сейчас?",
+        onConfirm: () => showToast("Инициирован вызов 112."),
+        confirmText: "Позвонить",
+      });
+      break;
+    case "risk-plan":
+      showModal({
+        title: "План действий",
+        message: "Открыть подробный план реагирования на текущие риски?",
+        onConfirm: () => showToast("План действий открыт."),
+      });
+      break;
+    case "edit-profile":
+      showModal({
+        title: "Профиль",
+        message: "Открыть режим редактирования профиля?",
+        onConfirm: () => showToast("Режим редактирования включён."),
+      });
       break;
     default:
       showToast("Действие выполнено.");
@@ -155,20 +216,11 @@ function setupActions() {
     });
   });
 
-  document.getElementById("notifications-button").addEventListener("click", () => {
-    showModal({
-      title: notificationPanel.title,
-      message: notificationPanel.message,
-      onConfirm: () => {
-        const last = state.notifications[state.notifications.length - 1];
-        showToast(last ? last.message : "Нет новых уведомлений.");
-        state.notifications = [];
-        updateBadge();
-      },
-    });
-  });
+  document
+    .getElementById("notifications-button")
+    .addEventListener("click", () => handleAction("notifications"));
 }
 
-createCalendar();
+renderNotifications();
 updateBadge();
 setupActions();
