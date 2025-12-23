@@ -103,6 +103,9 @@ function applyAlarmMode() {
   if (mapImage) {
     mapImage.src = "assets/street_alarm.png";
   }
+  if (alarmMapImage) {
+    alarmMapImage.src = "assets/street_alarm.png";
+  }
   if (statusText) {
     statusText.textContent = "ВНИМАНИЕ! ПРОИСШЕСТВИЕ В ВАШЕМ РАЙОНЕ!";
   }
