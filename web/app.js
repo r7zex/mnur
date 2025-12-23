@@ -6,6 +6,14 @@ const modalCancel = document.getElementById("modal-cancel");
 const modalConfirm = document.getElementById("modal-confirm");
 const badge = document.getElementById("notification-badge");
 const notificationList = document.getElementById("notification-list");
+const mapImage = document.getElementById("map-image");
+const crestLogo = document.getElementById("crest-logo");
+const crestEmoji = document.getElementById("crest-emoji");
+
+const envConfig = {
+  MAP_IMAGE_PATH: "",
+  MINISTRY_LOGO_PATH: "",
+};
 
 const state = {
   notifications: [
@@ -21,6 +29,57 @@ const state = {
     },
   ],
 };
+
+function parseEnvValue(value) {
+  const trimmed = value.trim();
+  if (
+    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+    (trimmed.startsWith("'") && trimmed.endsWith("'"))
+  ) {
+    return trimmed.slice(1, -1);
+  }
+  return trimmed;
+}
+
+function applyEnvConfig() {
+  if (mapImage && envConfig.MAP_IMAGE_PATH) {
+    mapImage.src = envConfig.MAP_IMAGE_PATH;
+  }
+  if (crestLogo && envConfig.MINISTRY_LOGO_PATH) {
+    crestLogo.src = envConfig.MINISTRY_LOGO_PATH;
+    crestLogo.hidden = false;
+    crestEmoji?.classList.add("is-hidden");
+  }
+}
+
+async function loadEnvConfig() {
+  try {
+    const response = await fetch(".env", { cache: "no-store" });
+    if (!response.ok) {
+      applyEnvConfig();
+      return;
+    }
+    const text = await response.text();
+    text.split(/\r?\n/).forEach((line) => {
+      const cleaned = line.trim();
+      if (!cleaned || cleaned.startsWith("#")) {
+        return;
+      }
+      const separatorIndex = cleaned.indexOf("=");
+      if (separatorIndex === -1) {
+        return;
+      }
+      const key = cleaned.slice(0, separatorIndex).trim();
+      const value = parseEnvValue(cleaned.slice(separatorIndex + 1));
+      if (key in envConfig) {
+        envConfig[key] = value;
+      }
+    });
+  } catch (error) {
+    console.warn("Не удалось загрузить .env файл.", error);
+  }
+  applyEnvConfig();
+}
 
 function showToast(message) {
   toast.textContent = message;
@@ -224,3 +283,4 @@ function setupActions() {
 renderNotifications();
 updateBadge();
 setupActions();
+loadEnvConfig();
