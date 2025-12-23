@@ -528,6 +528,11 @@ body {
   cursor: pointer;
 }
 
+.nav-item .icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
 .nav-item.active {
   color: var(--primary);
   font-weight: 600;
