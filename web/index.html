@@ -14,116 +14,231 @@
   </head>
   <body>
     <div class="device">
-      <div class="status-bar">
-        <span>9:41</span>
-        <div class="status-icons">
-          <span class="signal"></span>
-          <span class="wifi"></span>
-          <span class="battery"></span>
+      <div class="screen">
+        <div class="status-bar">
+          <span>9:41</span>
+          <div class="status-icons">
+            <span class="signal"></span>
+            <span class="wifi"></span>
+            <span class="battery"></span>
+          </div>
         </div>
-      </div>
-      <main class="app">
-        <header class="app-header">
-          <div class="logo">
-            <span class="logo-crest">🦅</span>
-          </div>
-          <div class="header-title">
-            <div class="name">МНУР</div>
-            <div class="subtitle">Министерство национальной</div>
-            <div class="subtitle">устойчивости и управления рисками</div>
-          </div>
-          <button class="icon-button" id="notifications-button" aria-label="Уведомления">
-            <span class="icon">🔔</span>
-            <span class="badge" id="notification-badge">1</span>
-          </button>
-        </header>
 
-        <section class="quick-actions">
-          <button class="card emergency" data-action="emergency">
-            <span class="card-icon">⚠️</span>
-            <span class="card-text">Экстренное сопровождение</span>
-          </button>
-          <button class="card" data-action="instructions">
-            <span class="card-icon">📋</span>
-            <span class="card-text">Мои инструкции</span>
-            <span class="chevron">›</span>
-          </button>
-          <button class="card" data-action="risks">
-            <span class="card-icon">🧾</span>
-            <span class="card-text">Реестр рисков</span>
-            <span class="chevron">›</span>
-          </button>
-          <button class="card" data-action="weather">
-            <span class="card-icon">🌐</span>
-            <span class="card-text">Метеопогода</span>
-            <span class="chevron">›</span>
-          </button>
-        </section>
-
-        <section class="map-card">
-          <div class="map-header">
-            <span class="map-alert">ВНИМАНИЕ</span>
-            <span class="map-route">Маршрут эвакуации</span>
-          </div>
-          <div class="map">
-            <svg viewBox="0 0 320 170" xmlns="http://www.w3.org/2000/svg">
-              <rect x="0" y="0" width="320" height="170" rx="18" fill="#e7eef6" />
-              <path d="M15 120 L90 40 L150 90 L215 60 L300 95" stroke="#e74c3c" stroke-width="4" stroke-dasharray="6 6" fill="none" />
-              <circle cx="90" cy="40" r="10" fill="#e74c3c" />
-              <circle cx="215" cy="60" r="10" fill="#e74c3c" />
-              <rect x="220" y="90" width="60" height="45" rx="8" fill="#ffd166" />
-              <path d="M245 98 L268 112 L245 126 L222 112 Z" fill="#1f2a44" />
-              <rect x="40" y="85" width="70" height="40" rx="8" fill="#c6d8ef" />
-              <rect x="120" y="95" width="60" height="35" rx="8" fill="#c6d8ef" />
-              <rect x="170" y="110" width="40" height="28" rx="8" fill="#c6d8ef" />
-            </svg>
-          </div>
-          <button class="primary-button" data-action="open-map">Открыть карту</button>
-        </section>
-
-        <section class="status-card">
-          <div class="status-icon">✅</div>
-          <div>
-            <div class="status-title">Ура, происшествий нет!</div>
-            <div class="status-subtitle">Последнее обновление: сегодня, 09:30</div>
-          </div>
-        </section>
-
-        <section class="calendar-card">
-          <div class="calendar-header">
-            <div>
-              <div class="calendar-title">Календарь происшествий</div>
-              <div class="calendar-month">Апрель 2024</div>
+        <main class="app-content is-active" data-screen="home">
+          <header class="app-header">
+            <div class="crest">🦅</div>
+            <div class="header-title">
+              <div class="name">МНУР: Министерство национальной</div>
+              <div class="subtitle">устойчивости и управления рисками</div>
             </div>
-            <button class="icon-button" data-action="calendar-settings" aria-label="Настройки календаря">
-              <span class="icon">›</span>
-            </button>
-          </div>
-          <div class="calendar-grid" id="calendar-grid">
-            <div class="day-name">Пн</div>
-            <div class="day-name">Вт</div>
-            <div class="day-name">Ср</div>
-            <div class="day-name">Чт</div>
-            <div class="day-name">Пт</div>
-            <div class="day-name">Сб</div>
-            <div class="day-name">Вс</div>
-          </div>
-          <button class="primary-button full" data-action="submit-claim">
-            Подать заявление на возмещение ущерба
-          </button>
-        </section>
-      </main>
+          </header>
 
-      <nav class="bottom-nav">
-        <button class="nav-item active" data-action="home">
-          <span class="icon">🏠</span>
-          <span>Главная</span>
-        </button>
-        <button class="nav-item" data-action="profile">
-          <span class="icon">👤</span>
-          <span>Профиль</span>
-        </button>
-      </nav>
+          <section class="user-bar">
+            <button class="avatar" data-action="profile" aria-label="Профиль">
+              <span>👤</span>
+            </button>
+            <div class="user-actions">
+              <button class="icon-button" data-action="support" aria-label="Чат">
+                <span class="icon">💬</span>
+              </button>
+              <button class="icon-button" id="notifications-button" aria-label="Уведомления">
+                <span class="icon">🔔</span>
+                <span class="badge" id="notification-badge">2</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="map-panel">
+            <div class="map-frame">
+              <img src="assets/map.svg" alt="Карта района" />
+            </div>
+            <button class="primary-button" data-action="open-map">Открыть карту</button>
+          </section>
+
+          <section class="status-banner">
+            <div class="status-text">Ура, происшествий нет!</div>
+          </section>
+
+          <section class="calendar-card">
+            <div class="calendar-header">
+              <div class="calendar-title">Календарь происшествий</div>
+              <button class="chevron-button" data-action="calendar">›</button>
+            </div>
+            <div class="calendar-row" id="calendar-row">
+              <div class="calendar-day">
+                <span class="day-label">Пн</span>
+                <span class="day-number">25</span>
+                <span class="day-dot danger"></span>
+              </div>
+              <div class="calendar-day">
+                <span class="day-label">Вт</span>
+                <span class="day-number">26</span>
+                <span class="day-dot warning"></span>
+              </div>
+              <div class="calendar-day">
+                <span class="day-label">Ср</span>
+                <span class="day-number">27</span>
+                <span class="day-dot warning"></span>
+              </div>
+              <div class="calendar-day">
+                <span class="day-label">Чт</span>
+                <span class="day-number">28</span>
+                <span class="day-dot safe"></span>
+              </div>
+              <div class="calendar-day">
+                <span class="day-label">Пт</span>
+                <span class="day-number">29</span>
+                <span class="day-dot neutral"></span>
+              </div>
+              <div class="calendar-day">
+                <span class="day-label">Сб</span>
+                <span class="day-number">30</span>
+                <span class="day-dot info"></span>
+              </div>
+              <div class="calendar-day">
+                <span class="day-label">Вс</span>
+                <span class="day-number">31</span>
+                <span class="day-dot neutral"></span>
+              </div>
+            </div>
+            <button class="primary-button" data-action="submit-claim">
+              Подать заявление на возмещение ущерба
+            </button>
+          </section>
+
+          <section class="prep-card">
+            <h2>Моя подготовка</h2>
+            <div class="prep-grid">
+              <button class="prep-item" data-action="go-bag">
+                <span class="prep-icon">🎒</span>
+                <span>Тревожный рюкзак</span>
+              </button>
+              <button class="prep-item" data-action="instructions">
+                <span class="prep-icon">📘</span>
+                <span>Инструкции</span>
+              </button>
+              <button class="prep-item" data-action="shelters">
+                <span class="prep-icon">🏠</span>
+                <span>Укрытия</span>
+              </button>
+              <button class="prep-item" data-action="safety">
+                <span class="prep-icon">🛡️</span>
+                <span>Безопасность</span>
+              </button>
+            </div>
+          </section>
+        </main>
+
+        <main class="app-content" data-screen="instructions">
+          <header class="page-header">
+            <button class="back-button" data-action="back-home">←</button>
+            <div class="page-title">Инструкция по действиям в ЧС</div>
+          </header>
+
+          <section class="instruction-list">
+            <div class="instruction-item">
+              <span class="instruction-icon blue">📄</span>
+              <div>
+                <div class="instruction-title">1. ВЗЯТЬ ПАСПОРТ И ДОКУМЕНТЫ.</div>
+              </div>
+            </div>
+            <div class="instruction-item">
+              <span class="instruction-icon red">🎒</span>
+              <div class="instruction-title">2. ВЗЯТЬ ТРЕВОЖНЫЙ РЮКЗАК.</div>
+            </div>
+            <div class="instruction-item">
+              <span class="instruction-icon blue">⚡</span>
+              <div class="instruction-title">3. ОТКЛЮЧИТЬ ГАЗ, ВОДУ, ЭЛЕКТРИЧЕСТВО.</div>
+            </div>
+            <div class="instruction-item">
+              <span class="instruction-icon blue">⬇️</span>
+              <div class="instruction-title">4. СПУСКАТЬСЯ ПО ЛЕСТНИЦЕ. ЛИФТ ЗАПРЕЩЕН.</div>
+            </div>
+            <div class="instruction-item">
+              <span class="instruction-icon blue">🏠</span>
+              <div class="instruction-title">5. ПРОСЛЕДОВАТЬ В БЛИЖАЙШЕЕ УКРЫТИЕ.</div>
+            </div>
+            <div class="instruction-item">
+              <span class="instruction-icon red">📡</span>
+              <div class="instruction-title">6. ОЖИДАТЬ ДАЛЬНЕЙШИХ УКАЗАНИЙ.</div>
+            </div>
+          </section>
+
+          <section class="instruction-actions">
+            <button class="primary-button" data-action="plan-complete">ПЛАН ВЫПОЛНЕН</button>
+            <button class="outline-button" data-action="call-112">ПОЗВОНИТЬ 112</button>
+          </section>
+        </main>
+
+        <main class="app-content" data-screen="risks">
+          <header class="page-header compact">
+            <button class="back-button" data-action="back-home">←</button>
+            <div class="page-title">Мои риски</div>
+          </header>
+          <section class="info-card">
+            <h3>Актуальные риски района</h3>
+            <ul>
+              <li>Повышенная нагрузка на электросети (до 18:00).</li>
+              <li>Сильный ветер вечером, возможны падения деревьев.</li>
+              <li>Рекомендована проверка комплекта безопасности.</li>
+            </ul>
+            <button class="primary-button" data-action="risk-plan">Открыть план действий</button>
+          </section>
+        </main>
+
+        <main class="app-content" data-screen="notifications">
+          <header class="page-header compact">
+            <button class="back-button" data-action="back-home">←</button>
+            <div class="page-title">Уведомления</div>
+          </header>
+          <section class="info-card" id="notification-list"></section>
+        </main>
+
+        <main class="app-content" data-screen="profile">
+          <header class="page-header compact">
+            <button class="back-button" data-action="back-home">←</button>
+            <div class="page-title">Профиль</div>
+          </header>
+          <section class="info-card">
+            <h3>Ирина Смирнова</h3>
+            <p>Статус готовности: высокий</p>
+            <div class="profile-metrics">
+              <div>
+                <span class="metric-value">4</span>
+                <span class="metric-label">плана</span>
+              </div>
+              <div>
+                <span class="metric-value">12</span>
+                <span class="metric-label">дней без ЧС</span>
+              </div>
+              <div>
+                <span class="metric-value">2</span>
+                <span class="metric-label">предупреждения</span>
+              </div>
+            </div>
+            <button class="primary-button" data-action="edit-profile">Редактировать профиль</button>
+          </section>
+        </main>
+
+        <nav class="bottom-nav">
+          <button class="nav-item active" data-action="home">
+            <span class="icon">🏠</span>
+            <span>Главная</span>
+          </button>
+          <button class="nav-item" data-action="risks">
+            <span class="icon">🛡️</span>
+            <span>Мои Риски</span>
+          </button>
+          <button class="nav-item" data-action="notifications">
+            <span class="icon">🔔</span>
+            <span>Уведомления</span>
+          </button>
+          <button class="nav-item" data-action="profile">
+            <span class="icon">👤</span>
+            <span>Профиль</span>
+          </button>
+        </nav>
+      </div>
     </div>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
