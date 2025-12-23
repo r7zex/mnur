@@ -7,6 +7,7 @@ const modalConfirm = document.getElementById("modal-confirm");
 const badge = document.getElementById("notification-badge");
 const notificationList = document.getElementById("notification-list");
 const mapImage = document.getElementById("map-image");
+const alarmMapImage = document.getElementById("alarm-map");
 const crestLogo = document.getElementById("crest-logo");
 const crestEmoji = document.getElementById("crest-emoji");
 const statusText = document.getElementById("status-text");
@@ -168,26 +169,33 @@ function renderNotifications() {
   });
 }
 
-let mapInstance = null;
+let mapZoomLevel = 1;
+const MAP_ZOOM_MIN = 1;
+const MAP_ZOOM_MAX = 3;
 
-function initMap() {
-  if (!window.L) {
+function setMapZoom(level) {
+  if (!alarmMapImage) {
     return;
   }
-  if (mapInstance) {
-    mapInstance.invalidateSize();
+  mapZoomLevel = Math.min(MAP_ZOOM_MAX, Math.max(MAP_ZOOM_MIN, level));
+  alarmMapImage.style.transform = `scale(${mapZoomLevel})`;
+}
+
+function resetMapZoom() {
+  setMapZoom(1);
+}
+
+function setupMapZoomControls() {
+  if (!alarmMapImage) {
     return;
   }
-  mapInstance = window.L.map("full-map").setView([55.751244, 37.618423], 12);
-  window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: "&copy; OpenStreetMap contributors",
-  }).addTo(mapInstance);
-  window.L.marker([55.761244, 37.598423])
-    .addTo(mapInstance)
-    .bindPopup("Укрытие №24");
-  window.L.marker([55.741244, 37.628423])
-    .addTo(mapInstance)
-    .bindPopup("Пункт помощи");
+  document.querySelectorAll("[data-map-zoom]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const direction = button.dataset.mapZoom;
+      const delta = direction === "in" ? 0.2 : -0.2;
+      setMapZoom(mapZoomLevel + delta);
+    });
+  });
 }
 
 function updateBagProgress() {
@@ -216,7 +224,7 @@ function showScreen(name) {
     item.classList.toggle("active", item.dataset.action === name);
   });
   if (name === "map") {
-    window.setTimeout(initMap, 0);
+    resetMapZoom();
   }
 }
 
@@ -307,3 +315,4 @@ setupActions();
 loadEnvConfig();
 updateBagProgress();
 applyAlarmMode();
+setupMapZoomControls();
