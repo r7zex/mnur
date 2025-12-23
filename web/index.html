@@ -11,12 +11,6 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-      crossorigin=""
-    />
   </head>
   <body>
     <div class="device">
@@ -314,7 +308,19 @@
               </div>
               <span class="pill pill-success">безопасно</span>
             </div>
-            <div class="map-live" id="full-map"></div>
+            <div class="map-live map-static">
+              <div class="map-zoom-viewport">
+                <img id="alarm-map" src="assets/street_alarm.png" alt="Фото района" />
+              </div>
+              <div class="map-zoom-controls" aria-label="Управление масштабом карты">
+                <button class="icon-button" type="button" data-map-zoom="in" aria-label="Увеличить">
+                  ＋
+                </button>
+                <button class="icon-button" type="button" data-map-zoom="out" aria-label="Уменьшить">
+                  −
+                </button>
+              </div>
+            </div>
             <div class="map-actions">
               <button class="outline-button" data-action="shelters">Список укрытий</button>
               <button class="primary-button" data-action="risk-plan">План действий</button>
@@ -705,11 +711,6 @@
       </div>
     </div>
 
-    <script
-      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-      crossorigin=""
-    ></script>
     <script src="config.js"></script>
     <script src="app.js"></script>
   </body>

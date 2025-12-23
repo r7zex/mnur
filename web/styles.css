@@ -813,11 +813,32 @@ body.alarm .calendar-day:has(#calendar-alert-dot) .day-number {
   border-radius: 18px;
   overflow: hidden;
   border: 2px solid #d7e1f3;
+  position: relative;
 }
 
-.map-live .leaflet-container {
-  height: 100%;
+.map-zoom-viewport {
   width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background: #eaf0fb;
+}
+
+.map-zoom-viewport img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform-origin: center;
+  transition: transform 0.2s ease;
+}
+
+.map-zoom-controls {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  display: grid;
+  gap: 8px;
 }
 
 .map-actions {
