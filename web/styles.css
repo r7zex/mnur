@@ -28,8 +28,8 @@ body {
 }
 
 .device {
-  width: 420px;
-  max-width: 92vw;
+  width: 460px;
+  max-width: 96vw;
   aspect-ratio: 9 / 16;
   background: var(--background);
   border-radius: 36px;
