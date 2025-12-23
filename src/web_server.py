@@ -4,7 +4,7 @@ from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-alarm = False
+alarm = True
 
 
 class AppHandler(SimpleHTTPRequestHandler):
